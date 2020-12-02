@@ -1,0 +1,31 @@
+---
+name: "Lint code"
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
+    branches:
+      - master
+      - develop
+
+jobs:
+  base-ci:
+    name: "Lint code and run unit tests"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Checkout Code"
+        uses: "actions/checkout@v2"
+
+      - name: "Setup Python Environment"
+        uses: "actions/setup-python@v2"
+        with:
+          python-version: "3.x"
+      - name: "Install package"
+        run: "pip install ."
+      - name: "Install dev dependencies"
+        run: "pip install -r requirements-dev.txt"
+      - name: "Run linter"
+        run: "pylint payler"
