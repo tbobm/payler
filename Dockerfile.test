@@ -1,0 +1,4 @@
+FROM payler:base
+COPY requirements-dev.txt .
+RUN pip install -r requirements-dev.txt
+ENTRYPOINT python -m pytest --color=yes --cov payler --cov-report term tests/
