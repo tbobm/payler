@@ -1,26 +1,12 @@
 """Database-related utilities."""
-import sqlalchemy as sa
-
-from payler.store import Base
-from payler import conf
+import motor
 
 
-def get_engine(url: str = None):
-    """Create the SQLAlchemy Engine."""
-    db_url = url
-    if url is None:
-        db_url = conf.get('DATABASE_URL')
-    engine = sa.create_engine(db_url)
-    return engine
+class SpoolManager:
+    """Interface to store payloads and interact with the Database."""
 
-
-def get_sessionmaker(engine: sa.engine.Engine) -> sa.orm.sessionmaker:
-    """Get a SQL Alchemy sessionmaker instance."""
-    maker = sa.orm.sessionmaker()
-    maker.configure(bind=engine)
-    return maker
-
-
-def create_structure(engine):
-    """Create the tables for database classes."""
-    Base.metadata.create_all(engine)
+    def __init__(self, url: str = None):
+        # TODO: Add logger
+        """Create the backend connection."""
+        self.client = motor.motor_asyncio.AsyncIOMotorClient(url)
+        self.client.ping()
