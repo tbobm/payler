@@ -9,4 +9,13 @@ class SpoolManager:
         # TODO: Add logger
         """Create the backend connection."""
         self.client = motor.motor_asyncio.AsyncIOMotorClient(url)
-        self.client.ping()
+        self.assert_alive()
+
+    def assert_alive(self) -> bool:
+        """Ensure connection integrity."""
+        return self.client.ping()
+
+    def store_payload(self) -> int:
+        """Store the Payload with corresponding metadatas."""
+        self.assert_alive()
+        return 0
