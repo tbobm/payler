@@ -13,7 +13,7 @@ on:
 
 jobs:
   base-ci:
-    name: "Lint code and run unit tests"
+    name: "Lint code"
     runs-on: "ubuntu-latest"
     steps:
       - name: "Checkout Code"
