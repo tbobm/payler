@@ -9,7 +9,7 @@ URL = "https://github.com/tbobm/payler/archive/{}.tar.gz".format(__version__)
 setup(
     name="payler",
     packages=["payler"],
-    install_requires=['click', "mongo", 'pyyaml'],
+    install_requires=['click', "pymongo", 'pyyaml', 'motor'],
     version=__version__,
     description="Broker payload spooler",
     author="Theo 'Bob' Massard",
