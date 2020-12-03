@@ -1,4 +1,4 @@
 click
-mongo
+motor
 pymongo
 PyYAML
