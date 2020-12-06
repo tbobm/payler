@@ -1,7 +1,7 @@
 """Common structures and dataclasses."""
 from datetime import datetime
 from typing import Any
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 
 
 @dataclass
@@ -16,6 +16,10 @@ class Payload:
     destination: Queue to which the payload should be sent back
     """
     message: Any
-    reup_time: datetime
+    reference_date: datetime
     source: str
     destination: str
+
+    def asdict(self) -> dict:
+        """Return a the Payload using a dictionary representation."""
+        return asdict(self)

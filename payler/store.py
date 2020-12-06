@@ -1,1 +1,1 @@
-"""Database entities and functions related to content management."""
+"""Utility functions to """
