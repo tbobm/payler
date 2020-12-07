@@ -1,5 +1,4 @@
 """Packaging file for payler."""
-from setuptools import find_packages
 from distutils.core import setup
 
 
@@ -9,7 +8,7 @@ URL = "https://github.com/tbobm/payler/archive/{}.tar.gz".format(__version__)
 setup(
     name="payler",
     packages=["payler"],
-    install_requires=['click', "pymongo", 'pyyaml', 'motor'],
+    install_requires=['click', "pymongo", 'pyyaml', 'motor', "aio_pika"],
     version=__version__,
     description="Broker payload spooler",
     author="Theo 'Bob' Massard",

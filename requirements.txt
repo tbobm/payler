@@ -1,3 +1,4 @@
+aio_pika
 click
 motor
 pymongo
