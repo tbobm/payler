@@ -2,21 +2,27 @@
 import os
 import importlib
 
+from payler import config
+
 import pytest
 
 
-def test_conf_import_existing():
+def test_conf_import_existing(monkeypatch):
     """Test accessing from constant when set."""
     url = 'postgresql://abc@localhost/sample'
-    os.environ['MONGODB_URL'] = url
-    from payler import config
+    monkeypatch.setenv('MONGODB_URL', url)
     assert config.get('MONGODB_URL') == url
-    del os.environ['MONGODB_URL']
 
 
-def test_conf_import_missing():
-    """Test error when accessing from missing value."""
+def test_conf_import_default(monkeypatch):
+    """Test default when accessing from missing known setting."""
+    monkeypatch.delenv('MONGODB_URL', raising=False)
+    mongo = config.get('MONGODB_URL')
+    assert config.AVAILABLE_SETTINGS['MONGODB_URL'] == mongo
+
+
+def test_conf_import_unknown(monkeypatch):
+    """Test error when accessing unkown setting."""
+    monkeypatch.delenv('EXAMPLE', raising=False)
     with pytest.raises(RuntimeError):
-        from payler import config
-        importlib.reload(config)
-        config.get('MONGODB_URL')
+        config.get('EXAMPLE')

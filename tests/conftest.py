@@ -8,12 +8,6 @@ from payler import structs
 
 
 @pytest.fixture
-def mongo_url():
-    """Fetching environment string if running through external database."""
-    return os.environ.get('MONGODB_URL', "mongodb://localhost/payler")
-
-
-@pytest.fixture
 def time_1():
     """Reference time."""
     now = datetime.now()
