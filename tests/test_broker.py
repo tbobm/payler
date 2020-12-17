@@ -26,3 +26,29 @@ async def test_store():
     delivered = await manager.send_payload(payload, payload.destination)
     assert delivered is not None
     assert delivered.body == body.encode()
+
+
+@pytest.mark.asyncio
+async def configure():
+    """Ensure the BrokerManager connects to RabbitMQ."""
+    queue_name = 'test_declare'
+    broker_url = config.get('BROKER_URL')
+    manager = await BrokerManager.create(broker_url)
+    assert await manager.is_reachable()
+    # TODO: Add configure test
+
+@pytest.mark.asyncio
+async def test_serve():
+    """Ensure the BrokerManager connects to RabbitMQ."""
+    queue_name = 'test_declare'
+    broker_url = config.get('BROKER_URL')
+    manager = await BrokerManager.create(broker_url)
+    assert await manager.is_reachable()
+
+    async def get_payload(payload, *args):
+        print(args)
+        print(payload.body.decode())
+
+    manager.configure(get_payload)
+    manager.serve()
+    await manager.send_payload({"message": 'hello'})

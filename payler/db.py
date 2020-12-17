@@ -12,7 +12,7 @@ class SpoolManager:
     """Service to store payloads and interact with the Database."""
     DEFAULT_COLLECTION_NAME = 'payloads'
 
-    def __init__(self, url: str, spool_collection: str = None, logger: logging.Logger = None):
+    def __init__(self, url: str, loop, spool_collection: str = None, logger: logging.Logger = None):
         """Create the backend connection."""
         if logger is None:
             self.logger = build_logger(self.__class__.__name__)
@@ -20,16 +20,22 @@ class SpoolManager:
             url,
             connectTimeoutMS=5000,
             serverSelectionTimeoutMS=5000,
+            io_loop=loop,
         )
         self.database = self.client.get_default_database()
         self.collection_name = spool_collection or self.DEFAULT_COLLECTION_NAME
         self.collection = self.database[self.collection_name]
+
+    def __str__(self):
+        return f'{type(self)} - {self.database}'
 
     async def is_reachable(self) -> bool:
         """Ensure connection integrity."""
         result = await self.client.server_info()
         return result is not None
 
+    # TODO: return object
+    # NOTE: create DriverResult
     async def store_payload(self, payload: Payload) -> bool:
         """Store the Payload with corresponding metadatas."""
         result = await self.collection.insert_one(payload.asdict())
