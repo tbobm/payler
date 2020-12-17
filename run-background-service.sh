@@ -5,7 +5,7 @@ docker network create payler_local || true
 docker run --rm -d -p 27017:27017 \
     -e MONGO_INITDB_ROOT_USERNAME=payler \
     -e MONGO_INITDB_ROOT_PASSWORD=secret \
-    -e MONGO_INITDB_DATABASE=payloads \
+    -e MONGO_INITDB_DATABASE=payler \
     --network payler_local \
     --name payler_storage \
     mongo:4.4
