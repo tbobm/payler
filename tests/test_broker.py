@@ -37,12 +37,13 @@ async def configure():
     assert await manager.is_reachable()
     # TODO: Add configure test
 
+
 @pytest.mark.asyncio
-async def test_serve():
+async def test_serve(event_loop):
     """Ensure the BrokerManager connects to RabbitMQ."""
     queue_name = 'test_declare'
     broker_url = config.get('BROKER_URL')
-    manager = await BrokerManager.create(broker_url)
+    manager = await BrokerManager.create(broker_url, event_loop)
     assert await manager.is_reachable()
 
     async def get_payload(payload, *args):
@@ -50,5 +51,4 @@ async def test_serve():
         print(payload.body.decode())
 
     manager.configure(get_payload)
-    manager.serve()
-    await manager.send_payload({"message": 'hello'})
+    assert manager.configured is True

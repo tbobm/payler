@@ -9,6 +9,7 @@ LOG_FORMAT = "%(asctime)s - [%(levelname)8s] - %(name)s: %(message)s"
 
 
 # TODO: Variabilize verbosity
+# TODO: Create common logger ? (or prefix with module name)
 def build_logger(name: str) -> logging.Logger:
     """Configure a logger with a `name`.
 
