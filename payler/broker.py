@@ -3,11 +3,13 @@ import logging
 
 import aio_pika
 
+from payler.structs import Payload
 from payler.logs import build_logger
 
 
 class BrokerManager:
     """Service to fetch and re-inject payloads."""
+    DEFAULT_ROUTING_KEY = "payloads"
 
     def __init__(self):
         self.logger = None
@@ -29,3 +31,14 @@ class BrokerManager:
         """Ensure connection integrity."""
         result = await self.connection.ready()
         return result is None
+
+    async def send_payload(self, payload: Payload, routing_key: str = None):
+        """Send a Payload to self.routing_key."""
+        async with self.connection:
+            channel = await self.connection.channel()
+            return await channel.default_exchange.publish(
+                aio_pika.Message(
+                    body=payload.message.encode(),
+                    ),
+                routing_key=routing_key or self.DEFAULT_ROUTING_KEY,
+            )
