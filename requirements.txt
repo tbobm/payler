@@ -1,6 +1,7 @@
 aio_pika
 click
 motor
+msgpack
 pendulum
 pymongo
 PyYAML

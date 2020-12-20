@@ -19,13 +19,13 @@ async def test_init():
 async def test_store():
     """Ensure the Broker quand send a Payload."""
     reference = datetime.now() + timedelta(seconds=5)
-    body = 'sample test'
+    body = b'sample test'
     payload = Payload(body, reference, 'source', 'example')
     broker_url = config.get('BROKER_URL')
     manager = await BrokerManager.create(broker_url)
     delivered = await manager.send_payload(payload, payload.destination)
     assert delivered is not None
-    assert delivered.body == body.encode()
+    assert delivered.body == body
 
 
 @pytest.mark.asyncio
