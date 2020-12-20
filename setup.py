@@ -8,7 +8,14 @@ URL = "https://github.com/tbobm/payler/archive/{}.tar.gz".format(__version__)
 setup(
     name="payler",
     packages=["payler"],
-    install_requires=['click', "pymongo", 'pyyaml', 'motor', "aio_pika"],
+    install_requires=[
+        "aio_pika",
+        "pymongo",
+        'click',
+        'motor',
+        'pendulum',
+        'pyyaml',
+    ],
     version=__version__,
     description="Broker payload spooler",
     author="Theo 'Bob' Massard",
@@ -22,7 +29,8 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "payler=payler.client:run_cli",
+            "payler-listen=payler.client:listen_to_broker",
+            "payler-watch=payler.client:watch_payloads_ready",
         ],
     },
 )
