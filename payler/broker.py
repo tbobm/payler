@@ -22,7 +22,7 @@ class BrokerManager:
         self.queue = None  # type: aio_pika.Queue
         self.action: typing.Callable
         self.driver = None  # type: SpoolManager
-        self.configured = False
+        self.kwargs = None
 
     @classmethod
     async def create(cls, url: str = None, loop = None, logger: logging.Logger = None):
@@ -41,11 +41,15 @@ class BrokerManager:
         result = await self.connection.ready()
         return result is None
 
-    async def send_payload(self, payload: Payload, routing_key: str = None):
+    async def send_payload(self, payload: Payload, routing_key: str = None, **kwargs):
         """Send a Payload to self.routing_key."""
-        self.logger.debug('awaiting channel for send_payload')
         routing = routing_key or self.DEFAULT_ROUTING_KEY
-        self.logger.info('Processing payload due for %s', payload.reference_date.isoformat())
+        self.logger.info(
+            'Processing payload due for %s with routing_key=%s and kwargs=%s',
+            payload.reference_date.isoformat(),
+            routing,
+            kwargs,
+        )
 
         try:
             message = aio_pika.Message(
@@ -67,7 +71,7 @@ class BrokerManager:
         # NOTE: could set as property / create BrokerManagerConfig
         self.action = action
         self.driver = driver
-        self.configured = True
+        self.kwargs = kwargs
 
     async def declare_queue(self, queue_name: str = None, **kwargs) -> aio_pika.Queue:
         """Instantiate a Queue and configure self.queue."""
@@ -85,7 +89,7 @@ class BrokerManager:
             self.action.__name__,
             type(self.driver),
         )
-        if not self.configured:
+        if self.action is None:
             raise ProcessingError(
                 f'Configure the {self.__class__.__name__} before using serve',
             )

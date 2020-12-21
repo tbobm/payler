@@ -1,11 +1,9 @@
 """Processing functions for broker operations."""
 import aio_pika
 import pendulum
-import pymongo
 
 from payler.broker import BrokerManager
 from payler.db import SpoolManager
-from payler.errors import ProcessingError
 from payler.structs import Payload
 
 
@@ -25,7 +23,7 @@ async def spool_message(message: aio_pika.Message, driver: SpoolManager, **kwarg
         source,
         destination,
     )
-    result = await driver.store_payload(payload)
+    result = await driver.store_payload(payload, **kwargs)
     # TODO: do correct post-processing logging
     return result, payload
 
@@ -38,4 +36,4 @@ async def send_message_back(document: dict, driver: BrokerManager, **kwargs):
         source=document.get('source'),
         destination=document.get('destination'),
     )
-    return await driver.send_payload(payload, routing_key=payload.destination)
+    return await driver.send_payload(payload, routing_key=payload.destination, **kwargs)
