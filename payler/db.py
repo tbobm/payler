@@ -3,7 +3,6 @@ import asyncio
 
 import logging
 import typing
-import time
 
 import motor.motor_asyncio
 from motor.motor_asyncio import AsyncIOMotorCollection
@@ -37,7 +36,6 @@ class SpoolManager:
 
         self.action: typing.Callable
         self.driver = None
-        self.configured = False
 
     def __str__(self):
         return f'{type(self)} - {self.database}'
@@ -49,13 +47,14 @@ class SpoolManager:
 
     # TODO: return object
     # NOTE: create DriverResult
-    async def store_payload(self, payload: Payload) -> bool:
+    async def store_payload(self, payload: Payload, **kwargs) -> bool:
         """Store the Payload with corresponding metadatas."""
         result = await self.collection.insert_one(payload.asdict())
         self.logger.debug(
-            'stored payload with id=%s reference_date=%s',
+            'stored payload with id=%s reference_date=%s kwargs=%s',
             result.inserted_id,
             payload.reference_date,
+            kwargs,
         )
         return result
 
@@ -64,7 +63,6 @@ class SpoolManager:
         """Configure the manager for post-spooling processing."""
         self.action = action
         self.driver = driver
-        self.configured = True
 
     async def _search_ready(self, match_date: pendulum.datetime) -> typing.Any:
         query = {
