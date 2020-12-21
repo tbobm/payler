@@ -13,7 +13,7 @@ async def process_queue(loop):
     broker_url = config.get('BROKER_URL')
     mongo_url = config.get('MONGODB_URL')
     storage_manager = SpoolManager(mongo_url, loop=loop)
-    print(await storage_manager.is_reachable())
+    await storage_manager.is_reachable()
     broker_manager = await BrokerManager.create(broker_url, loop=loop)
     broker_manager.configure(
         action=process.spool_message,
@@ -27,7 +27,7 @@ async def watch_storage(loop):
     broker_url = config.get('BROKER_URL')
     mongo_url = config.get('MONGODB_URL')
     storage_manager = SpoolManager(mongo_url, loop=loop)
-    print(await storage_manager.is_reachable())
+    await storage_manager.is_reachable()
     broker_manager = await BrokerManager.create(broker_url, loop=loop)
     storage_manager.configure(
         action=process.send_message_back,

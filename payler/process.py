@@ -28,15 +28,11 @@ async def spool_message(message: aio_pika.Message, driver: SpoolManager, **kwarg
     )
     result = await driver.store_payload(payload)
     # TODO: do correct post-processing logging
-    if result:
-        print('stored payload with reference=', reference.isoformat())
-        return
-    return result
+    return result, reference
 
 
 async def send_message_back(document: dict, driver: BrokerManager, **kwargs):
     """Inject the Payload back in the Broker."""
-    # import ipdb; ipdb.set_trace()
     payload = Payload(
         message=document.get('message'),
         reference_date=document.get('reference_date'),

@@ -1,6 +1,6 @@
 """Pytest configuration for unit testing."""
-import os
 from datetime import datetime, timedelta
+import json
 
 import pytest
 
@@ -16,11 +16,11 @@ def time_1():
 
 @pytest.fixture
 def base_payload(time_1):
-    return {
+    payload = {
         'message': 'sampletest hey',
         'ID': 332,
-        'date': time_1,
     }
+    return json.dumps(payload).encode()
 
 
 @pytest.fixture

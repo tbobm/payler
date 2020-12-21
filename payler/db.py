@@ -9,6 +9,7 @@ import motor.motor_asyncio
 from motor.motor_asyncio import AsyncIOMotorCollection
 import pendulum
 
+from payler.errors import ProcessingError
 from payler.structs import Payload
 from payler.logs import build_logger
 
@@ -56,7 +57,7 @@ class SpoolManager:
             result.inserted_id,
             payload.reference_date,
         )
-        return result.acknowledged
+        return result
 
     # TODO: Common method with BrokerManager
     def configure(self, action: typing.Callable, driver=None):
@@ -65,30 +66,45 @@ class SpoolManager:
         self.driver = driver
         self.configured = True
 
-    async def _search_ready(self, match_date: pendulum.datetime, action) -> typing.Any:
+    async def _search_ready(self, match_date: pendulum.datetime) -> typing.Any:
         query = {
             'reference_date': {'$lte': match_date},
         }
         documents = self.collection.find(query)
         async for doc in documents:
-            result = await self.action(doc, self.driver)
-            self.logger.info(
-                'Processed job with id=%s result=%s', doc['_id'], result,
-            )
-            if result:
-                await self.collection.delete_one({'_id': doc['_id']}, )
+            yield doc
         else:
-            self.logger.info('no matching document')
+            self.logger.debug('no matching document')
+        return
 
-    async def search_ready(self):
+    async def search_ready(self, should_loop=True):
         """Find documents with a `reference_date` older than `match_date`."""
         self.logger.info(
             "Engaging database polling - Applying (action=%s, driver=%s) to events",
             self.action.__name__,
             type(self.driver),
         )
+        if not should_loop:
+            return await self.process_and_cleanup()
         while True:
-            match_date = pendulum.now()
-            self.logger.info('waiting for %d', self.DEFAULT_SLEEP_DURATION)
-            await self._search_ready(match_date, self.action)
+            await self.process_and_cleanup()
+            self.logger.debug('waiting for %ds', self.DEFAULT_SLEEP_DURATION)
             await asyncio.sleep(self.DEFAULT_SLEEP_DURATION)
+
+    async def process_and_cleanup(self):
+        """Find the matching jobs, process them and remove them from storage."""
+        match_date = pendulum.now()
+        async for doc in self._search_ready(match_date):
+            try:
+                result = await self.action(doc, self.driver)
+                self.logger.info(
+                    'Processed job with id=%s result=%s', doc['_id'], result,
+                )
+            except ProcessingError as err:
+                self.logger.error('Could not parse %s: %s', doc['_id'], err)
+                continue
+            if result:
+                await self.collection.delete_one({'_id': doc['_id']})
+                self.logger.debug('deleted job _id=%s', doc['_id'])
+        else:
+            self.logger.info('Could not find any document with match_date=%s', match_date)

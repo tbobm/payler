@@ -43,19 +43,22 @@ class BrokerManager:
 
     async def send_payload(self, payload: Payload, routing_key: str = None):
         """Send a Payload to self.routing_key."""
-        self.logger.info('awaiting connection')
-        # import ipdb; ipdb.set_trace()
-        self.logger.info('awaiting channel')
-        channel = await self.connection.channel()
+        self.logger.debug('awaiting channel for send_payload')
         routing = routing_key or self.DEFAULT_ROUTING_KEY
-        self.logger.info('Processing payload %s', payload)
-        result = await channel.default_exchange.publish(
-            aio_pika.Message(
+        self.logger.info('Processing payload due for %s', payload.reference_date.isoformat())
+
+        try:
+            message = aio_pika.Message(
                 body=payload.message,
-            ),
+            )
+        except TypeError as err:
+            raise ProcessingError('Invalid payload') from err
+        channel = await self.connection.channel()
+        result = await channel.default_exchange.publish(
+            message,
             routing_key=routing,
         )
-        self.logger.info('Sent payload to %s', routing)
+        self.logger.debug('Sent payload to %s', routing)
         await channel.close()
         return result
 
