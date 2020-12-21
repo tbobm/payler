@@ -78,7 +78,7 @@ class BrokerManager:
         await channel.close()
         return queue
 
-    async def serve(self, listen_queue: aio_pika.Queue = None, **kwargs):
+    async def serve(self, **kwargs):
         """Consume messages from `queue`."""
         self.logger.info(
             "Listening for events (action=%s, driver=%s)",
