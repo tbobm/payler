@@ -5,8 +5,6 @@ import json
 from typing import Any
 from dataclasses import dataclass, asdict
 
-import msgpack
-
 
 @dataclass
 class Payload:
@@ -33,7 +31,3 @@ class Payload:
         if isinstance(self.message, dict):
             return json.dumps(self.message).encode()
         return self.message
-
-    def message_to_bytes(self) -> bytes:
-        """Encode message using msgpack."""
-        return msgpack.packb(self.message, use_bin_type=True)
