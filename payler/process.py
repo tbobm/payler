@@ -1,9 +1,7 @@
 """Processing functions for broker operations."""
-import json
-
-import pymongo
 import aio_pika
 import pendulum
+import pymongo
 
 from payler.broker import BrokerManager
 from payler.db import SpoolManager
@@ -14,6 +12,7 @@ from payler.structs import Payload
 async def spool_message(message: aio_pika.Message, driver: SpoolManager, **kwargs):
     """Decode and spool `message` using `driver`."""
     delay = int(message.headers.get('x-delay'))
+    # NOTE: transform default destination in constant
     destination = message.headers.get('x-destination', 'payler-out')
     data = message.body
     now = pendulum.now()
@@ -28,7 +27,7 @@ async def spool_message(message: aio_pika.Message, driver: SpoolManager, **kwarg
     )
     result = await driver.store_payload(payload)
     # TODO: do correct post-processing logging
-    return result, reference
+    return result, payload
 
 
 async def send_message_back(document: dict, driver: BrokerManager, **kwargs):

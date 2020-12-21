@@ -23,7 +23,7 @@ async def process_queue(loop):
 
 
 async def watch_storage(loop):
-    """Start Payler using the CLI flags."""
+    """Watch the storage and inject in BrokerManager exchange."""
     broker_url = config.get('BROKER_URL')
     mongo_url = config.get('MONGODB_URL')
     storage_manager = SpoolManager(mongo_url, loop=loop)
@@ -37,12 +37,14 @@ async def watch_storage(loop):
 
 
 def listen_to_broker():
+    """Watch the payload queue for payload to delay."""
     loop = asyncio.get_event_loop()
     loop.run_until_complete(process_queue(loop))
     loop.close()
 
 
 def watch_payloads_ready():
+    """Watch the Storage and re-inject matured payloads."""
     loop = asyncio.get_event_loop()
     loop.run_until_complete(watch_storage(loop))
     loop.close()
