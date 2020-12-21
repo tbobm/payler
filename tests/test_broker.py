@@ -51,4 +51,4 @@ async def test_serve(event_loop):
         print(payload.body.decode())
 
     manager.configure(get_payload)
-    assert manager.configured is True
+    assert manager.action is not None
