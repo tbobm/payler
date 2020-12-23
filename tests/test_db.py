@@ -44,14 +44,11 @@ async def test_search_ready(event_loop, payload, time_1):
     payload2 = payload
     date_2 = pendulum.now().subtract(minutes=2)
     payload2.reference_date = date_2
-    print(payload2)
     result2 = await manager.store_payload(payload2)
     assert result2 is not None
 
     async def delete_document(document, driver):
-        print('deteling', document['_id'])
         collection = driver.client.get_default_database()[driver.DEFAULT_COLLECTION_NAME]
-        print(collection)
         await collection.update_one(
             {'_id': document['_id']},
             { '$set': {
