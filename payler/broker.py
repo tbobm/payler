@@ -101,6 +101,7 @@ class BrokerManager:
                     async for message in queue_iter:
                         async with message.process():
                             try:
+                                self.logger.debug('Processing %s', message)
                                 await self.action(message, self.driver, **kwargs)
                             except ProcessingError as reason:
                                 # NOTE: handle this properly (logging)
