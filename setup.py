@@ -2,16 +2,20 @@
 from distutils.core import setup
 
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 URL = "https://github.com/tbobm/payler/archive/{}.tar.gz".format(__version__)
-
-with open('requirements.txt') as requirements:
-    dependencies = [line.strip() for line in requirements.readlines()]
 
 setup(
     name="payler",
     packages=["payler"],
-    install_requires=dependencies,
+    install_requires=[
+        "aio_pika",
+        "click",
+        "motor",
+        "pendulum",
+        "pymongo",
+        "PyYAML",
+    ],
     version=__version__,
     description="Broker payload spooler",
     author="Theo 'Bob' Massard",
