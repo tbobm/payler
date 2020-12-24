@@ -5,17 +5,13 @@ from distutils.core import setup
 __version__ = "0.0.0"
 URL = "https://github.com/tbobm/payler/archive/{}.tar.gz".format(__version__)
 
+with open('requirements.txt') as requirements:
+    dependencies = [line.strip() for line in requirements.readlines()]
+
 setup(
     name="payler",
     packages=["payler"],
-    install_requires=[
-        "aio_pika",
-        "pymongo",
-        'click',
-        'motor',
-        'pendulum',
-        'pyyaml',
-    ],
+    install_requires=dependencies,
     version=__version__,
     description="Broker payload spooler",
     author="Theo 'Bob' Massard",
@@ -31,6 +27,7 @@ setup(
         "console_scripts": [
             "payler-listen=payler.client:listen_to_broker",
             "payler-watch=payler.client:watch_payloads_ready",
+            "payler=payler.client:run_payler",
         ],
     },
 )
