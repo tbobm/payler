@@ -1,10 +1,9 @@
 """Test configuration management module."""
-import os
-import importlib
-
-from payler import config
+import io
 
 import pytest
+
+from payler import config
 
 
 def test_conf_import_existing(monkeypatch):
@@ -26,3 +25,8 @@ def test_conf_import_unknown(monkeypatch):
     monkeypatch.delenv('EXAMPLE', raising=False)
     with pytest.raises(RuntimeError):
         config.get('EXAMPLE')
+
+
+def test_load_config(example_config):
+    """Ensure we can properly load a YAML file."""
+    config.load(example_config)
