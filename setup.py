@@ -2,7 +2,7 @@
 from distutils.core import setup
 
 
-__version__ = "0.0.0"
+__version__ = "0.1.0"
 URL = "https://github.com/tbobm/payler/archive/{}.tar.gz".format(__version__)
 
 with open('requirements.txt') as requirements:
