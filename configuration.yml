@@ -1,0 +1,7 @@
+---
+workflows:
+  - name: 'Consume broker payloads and store'
+    # location: "payler"
+    callable: "client.process_queue"
+  - name: "Poll storage and re-inject in RabbitMQ"
+    callable: "client.watch_storage"
