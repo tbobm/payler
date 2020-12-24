@@ -1,5 +1,7 @@
 FROM python:3.8-slim
 
+LABEL org.opencontainers.image.source https://github.com/tbobm/payler
+
 WORKDIR /app
 
 COPY configuration.yml /
