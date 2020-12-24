@@ -28,7 +28,8 @@ class BrokerManager:
     async def create(cls, url: str = None, loop = None, logger: logging.Logger = None):
         """Create the backend connection."""
         broker_manager = BrokerManager()
-        if logger is None:
+        broker_manager.logger = logger
+        if broker_manager.logger is None:
             broker_manager.logger = build_logger(cls.__name__)
         broker_manager.connection = await aio_pika.connect_robust(
             url,
