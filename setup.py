@@ -25,8 +25,6 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "payler-listen=payler.client:listen_to_broker",
-            "payler-watch=payler.client:watch_payloads_ready",
             "payler=payler.client:run_payler",
         ],
     },
