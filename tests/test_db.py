@@ -32,7 +32,7 @@ async def test_store(event_loop, payload):
 
 
 @pytest.mark.asyncio
-async def test_search_ready(event_loop, payload, time_1):
+async def test_search_ready(event_loop, payload):
     """Ensure the SpoolManager connects to Mongo."""
     mongo_url = config.get('MONGODB_URL')
     manager = SpoolManager(mongo_url, event_loop)

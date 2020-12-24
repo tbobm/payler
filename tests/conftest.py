@@ -1,6 +1,8 @@
 """Pytest configuration for unit testing."""
 from datetime import datetime, timedelta
+import io
 import json
+from textwrap import dedent
 
 import pytest
 
@@ -31,3 +33,16 @@ def payload(base_payload, time_1):
         'source_queue',
         'destination_queue',
     )
+
+@pytest.fixture
+def example_config():
+    """Basic YAML-readable config file."""
+    return io.StringIO(dedent("""
+    ---
+    name: sample
+    workflows:
+      - name: 'Consume broker payloads and store'
+        callable: "client.process_queue"
+      - name: "Poll storage and re-inject in RabbitMQ"
+        callable: "client.watch_storage"
+    """))

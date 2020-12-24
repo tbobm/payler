@@ -18,11 +18,12 @@ class SpoolManager:
     """Service to store payloads and interact with the Database."""
     DEFAULT_COLLECTION_NAME = 'payloads'
     # TODO: Move to conf.py
-    DEFAULT_SLEEP_DURATION = 5
+    DEFAULT_SLEEP_DURATION = 30
 
     def __init__(self, url: str, loop, spool_collection: str = None, logger: logging.Logger = None):
         """Create the backend connection."""
-        if logger is None:
+        self.logger = logger
+        if self.logger is None:
             self.logger = build_logger(self.__class__.__name__)
         self.client = motor.motor_asyncio.AsyncIOMotorClient(
             url,

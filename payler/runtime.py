@@ -56,7 +56,8 @@ def get_callable(location: str = "payler", process: str = None):
         ) from err
 
 
-def register_workflows(workflow_config: List[Dict[str, str]], loop: AbstractEventLoop) -> List[Workflow]:
+def register_workflows(workflow_config: List[Dict[str, str]],
+                       loop: AbstractEventLoop) -> List[Workflow]:
     """Transform the `workflows` config entry in a list of `Workflow`.
 
     This function takes the `.workflows` list and creates the corresponding
