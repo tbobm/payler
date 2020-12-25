@@ -41,6 +41,8 @@ async def watch_storage(loop: asyncio.events.AbstractEventLoop):
         action=process.send_message_back,
         driver=broker_manager,
     )  # action=print, driver=None
+
+    await storage_manager.setup()
     await storage_manager.search_ready()
 
 

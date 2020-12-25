@@ -7,6 +7,7 @@ import typing
 import motor.motor_asyncio
 from motor.motor_asyncio import AsyncIOMotorCollection
 import pendulum
+import pymongo
 
 from payler.errors import ProcessingError
 from payler.structs import Payload
@@ -22,9 +23,10 @@ class SpoolManager:
 
     def __init__(self, url: str, loop, spool_collection: str = None, logger: logging.Logger = None):
         """Create the backend connection."""
-        self.logger = logger
-        if self.logger is None:
-            self.logger = build_logger(self.__class__.__name__)
+        if logger is None:
+            self.logger = build_logger(self.__class__.__name__)  # type: logging.Logger
+        else:
+            self.logger = logger
         self.client = motor.motor_asyncio.AsyncIOMotorClient(
             url,
             connectTimeoutMS=5000,
@@ -40,6 +42,26 @@ class SpoolManager:
 
     def __str__(self):
         return f'{type(self)} - {self.database}'
+
+    async def setup(self) -> str:
+        """Prepare the OutputDriver configuration.
+
+        Create an index on the storage collection to improve querying spooled payloads.
+        Index is created on the `reference_date` field.
+        """
+        infos = await self.collection.index_information()
+        for key in infos:
+            if 'reference_date' not in key:
+                continue
+            self.logger.info('Index %s exists', key)
+            return key
+
+        result = await self.collection.create_index(
+            [('reference_date', pymongo.ASCENDING),],
+        )
+        if result:
+            self.logger.info('Index %s created', result)
+        return result
 
     async def is_reachable(self) -> bool:
         """Ensure connection integrity."""

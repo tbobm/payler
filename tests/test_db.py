@@ -17,6 +17,19 @@ async def test_init(event_loop):
     assert await manager.is_reachable()
     assert manager.collection_name == SpoolManager.DEFAULT_COLLECTION_NAME
 
+@pytest.mark.asyncio
+async def test_setup(event_loop):
+    """Ensure the SpoolManager connects to Mongo."""
+    mongo_url = config.get('MONGODB_URL')
+    manager = SpoolManager(mongo_url, event_loop)
+    assert await manager.is_reachable()
+
+    index_name = await manager.setup()
+    infos = await manager.collection.index_information()
+    assert index_name in infos
+
+    created = await manager.setup()
+    await manager.collection.drop_index(index_name)
 
 @pytest.mark.asyncio
 async def test_store(event_loop, payload):
