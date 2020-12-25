@@ -1,0 +1,547 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>payler package &mdash; payler 0.1.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to payler’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> payler
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">payler package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-payler.broker">payler.broker module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-payler.client">payler.client module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-payler.commands">payler.commands module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-payler.config">payler.config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-payler.db">payler.db module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-payler.errors">payler.errors module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-payler.logs">payler.logs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-payler.process">payler.process module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-payler.runtime">payler.runtime module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-payler.store">payler.store module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-payler.structs">payler.structs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-payler.utils">payler.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-payler">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">payler</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>payler package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/payler.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="payler-package">
+<h1>payler package<a class="headerlink" href="#payler-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-payler.broker">
+<span id="payler-broker-module"></span><h2>payler.broker module<a class="headerlink" href="#module-payler.broker" title="Permalink to this headline">¶</a></h2>
+<p>Broker-related utilities.</p>
+<dl class="py class">
+<dt id="payler.broker.BrokerManager">
+<em class="property">class </em><code class="sig-prename descclassname">payler.broker.</code><code class="sig-name descname">BrokerManager</code><a class="headerlink" href="#payler.broker.BrokerManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Service to fetch and re-inject payloads.</p>
+<dl class="py attribute">
+<dt id="payler.broker.BrokerManager.DEFAULT_QUEUE_NAME">
+<code class="sig-name descname">DEFAULT_QUEUE_NAME</code><em class="property"> = 'payler-jobs'</em><a class="headerlink" href="#payler.broker.BrokerManager.DEFAULT_QUEUE_NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="payler.broker.BrokerManager.DEFAULT_ROUTING_KEY">
+<code class="sig-name descname">DEFAULT_ROUTING_KEY</code><em class="property"> = 'payloads'</em><a class="headerlink" href="#payler.broker.BrokerManager.DEFAULT_ROUTING_KEY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="payler.broker.BrokerManager.configure">
+<code class="sig-name descname">configure</code><span class="sig-paren">(</span><em class="sig-param">action: Callable = &lt;built-in function print&gt;</em>, <em class="sig-param">driver=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#payler.broker.BrokerManager.configure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure the BrokerManager to serve the listening Queue.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="payler.broker.BrokerManager.create">
+<em class="property">async classmethod </em><code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">url</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">loop</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">logger</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>logging.Logger<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#payler.broker.BrokerManager.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the backend connection.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="payler.broker.BrokerManager.declare_queue">
+<em class="property">async </em><code class="sig-name descname">declare_queue</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">queue_name</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span> &#x2192; aio_pika.queue.Queue<a class="headerlink" href="#payler.broker.BrokerManager.declare_queue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instantiate a Queue and configure self.queue.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="payler.broker.BrokerManager.is_reachable">
+<em class="property">async </em><code class="sig-name descname">is_reachable</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#payler.broker.BrokerManager.is_reachable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensure connection integrity.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="payler.broker.BrokerManager.send_payload">
+<em class="property">async </em><code class="sig-name descname">send_payload</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">payload</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#payler.structs.Payload" title="payler.structs.Payload">payler.structs.Payload</a></span></em>, <em class="sig-param"><span class="n">routing_key</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#payler.broker.BrokerManager.send_payload" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a Payload to self.routing_key.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="payler.broker.BrokerManager.serve">
+<em class="property">async </em><code class="sig-name descname">serve</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#payler.broker.BrokerManager.serve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Consume messages from <cite>queue</cite>.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-payler.client">
+<span id="payler-client-module"></span><h2>payler.client module<a class="headerlink" href="#module-payler.client" title="Permalink to this headline">¶</a></h2>
+<p>CLI entrypoints.</p>
+<dl class="py function">
+<dt id="payler.client.listen_to_broker">
+<code class="sig-prename descclassname">payler.client.</code><code class="sig-name descname">listen_to_broker</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#payler.client.listen_to_broker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Watch the payload queue for payload to delay.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="payler.client.process_queue">
+<em class="property">async </em><code class="sig-prename descclassname">payler.client.</code><code class="sig-name descname">process_queue</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">loop</span><span class="p">:</span> <span class="n">asyncio.events.AbstractEventLoop</span></em><span class="sig-paren">)</span><a class="headerlink" href="#payler.client.process_queue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start Payler using the CLI flags.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="payler.client.watch_payloads_ready">
+<code class="sig-prename descclassname">payler.client.</code><code class="sig-name descname">watch_payloads_ready</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#payler.client.watch_payloads_ready" title="Permalink to this definition">¶</a></dt>
+<dd><p>Watch the Storage and re-inject matured payloads.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="payler.client.watch_storage">
+<em class="property">async </em><code class="sig-prename descclassname">payler.client.</code><code class="sig-name descname">watch_storage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">loop</span><span class="p">:</span> <span class="n">asyncio.events.AbstractEventLoop</span></em><span class="sig-paren">)</span><a class="headerlink" href="#payler.client.watch_storage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Watch the storage and inject in BrokerManager exchange.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-payler.commands">
+<span id="payler-commands-module"></span><h2>payler.commands module<a class="headerlink" href="#module-payler.commands" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-payler.config">
+<span id="payler-config-module"></span><h2>payler.config module<a class="headerlink" href="#module-payler.config" title="Permalink to this headline">¶</a></h2>
+<p>Configuration variables for payler.</p>
+<dl class="py function">
+<dt id="payler.config.get">
+<code class="sig-prename descclassname">payler.config.</code><code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">key</span></em><span class="sig-paren">)</span><a class="headerlink" href="#payler.config.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the matching configuration value.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="payler.config.load">
+<code class="sig-prename descclassname">payler.config.</code><code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config_file</span><span class="p">:</span> <span class="n">IO</span></em><span class="sig-paren">)</span> &#x2192; dict<a class="headerlink" href="#payler.config.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the config file and return</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-payler.db">
+<span id="payler-db-module"></span><h2>payler.db module<a class="headerlink" href="#module-payler.db" title="Permalink to this headline">¶</a></h2>
+<p>Database-related utilities.</p>
+<dl class="py class">
+<dt id="payler.db.SpoolManager">
+<em class="property">class </em><code class="sig-prename descclassname">payler.db.</code><code class="sig-name descname">SpoolManager</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">url</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">loop</span></em>, <em class="sig-param"><span class="n">spool_collection</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">logger</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>logging.Logger<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#payler.db.SpoolManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Service to store payloads and interact with the Database.</p>
+<dl class="py attribute">
+<dt id="payler.db.SpoolManager.DEFAULT_COLLECTION_NAME">
+<code class="sig-name descname">DEFAULT_COLLECTION_NAME</code><em class="property"> = 'payloads'</em><a class="headerlink" href="#payler.db.SpoolManager.DEFAULT_COLLECTION_NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="payler.db.SpoolManager.DEFAULT_SLEEP_DURATION">
+<code class="sig-name descname">DEFAULT_SLEEP_DURATION</code><em class="property"> = 30</em><a class="headerlink" href="#payler.db.SpoolManager.DEFAULT_SLEEP_DURATION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="payler.db.SpoolManager.configure">
+<code class="sig-name descname">configure</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span><span class="p">:</span> <span class="n">Callable</span></em>, <em class="sig-param"><span class="n">driver</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#payler.db.SpoolManager.configure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure the manager for post-spooling processing.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="payler.db.SpoolManager.is_reachable">
+<em class="property">async </em><code class="sig-name descname">is_reachable</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#payler.db.SpoolManager.is_reachable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensure connection integrity.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="payler.db.SpoolManager.process_and_cleanup">
+<em class="property">async </em><code class="sig-name descname">process_and_cleanup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#payler.db.SpoolManager.process_and_cleanup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the matching jobs, process them and remove them from storage.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="payler.db.SpoolManager.search_ready">
+<em class="property">async </em><code class="sig-name descname">search_ready</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">should_loop</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#payler.db.SpoolManager.search_ready" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find documents with a <cite>reference_date</cite> older than <cite>match_date</cite>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="payler.db.SpoolManager.setup">
+<em class="property">async </em><code class="sig-name descname">setup</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#payler.db.SpoolManager.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepare the OutputDriver configuration.</p>
+<p>Create an index on the storage collection to improve querying spooled payloads.
+Index is created on the <cite>reference_date</cite> field.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="payler.db.SpoolManager.store_payload">
+<em class="property">async </em><code class="sig-name descname">store_payload</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">payload</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#payler.structs.Payload" title="payler.structs.Payload">payler.structs.Payload</a></span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#payler.db.SpoolManager.store_payload" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store the Payload with corresponding metadatas.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-payler.errors">
+<span id="payler-errors-module"></span><h2>payler.errors module<a class="headerlink" href="#module-payler.errors" title="Permalink to this headline">¶</a></h2>
+<p>Common exceptions in Payler.</p>
+<dl class="py exception">
+<dt id="payler.errors.ProcessingError">
+<em class="property">exception </em><code class="sig-prename descclassname">payler.errors.</code><code class="sig-name descname">ProcessingError</code><a class="headerlink" href="#payler.errors.ProcessingError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Could not properly process the payload.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-payler.logs">
+<span id="payler-logs-module"></span><h2>payler.logs module<a class="headerlink" href="#module-payler.logs" title="Permalink to this headline">¶</a></h2>
+<p>Logging-related utility functions.</p>
+<p>Provide a friendly interface to log payler’s operations.</p>
+<dl class="py function">
+<dt id="payler.logs.build_logger">
+<code class="sig-prename descclassname">payler.logs.</code><code class="sig-name descname">build_logger</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; logging.Logger<a class="headerlink" href="#payler.logs.build_logger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure a logger with a <cite>name</cite>.</p>
+<dl class="simple">
+<dt>Example output:</dt><dd><p>2020-10-30 17:55:59,927 - [    INFO ] - SpookManager: inserted document with _id=…</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-payler.process">
+<span id="payler-process-module"></span><h2>payler.process module<a class="headerlink" href="#module-payler.process" title="Permalink to this headline">¶</a></h2>
+<p>Processing functions for broker operations.</p>
+<dl class="py function">
+<dt id="payler.process.send_message_back">
+<em class="property">async </em><code class="sig-prename descclassname">payler.process.</code><code class="sig-name descname">send_message_back</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">document</span><span class="p">:</span> <span class="n">dict</span></em>, <em class="sig-param"><span class="n">driver</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#payler.broker.BrokerManager" title="payler.broker.BrokerManager">payler.broker.BrokerManager</a></span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#payler.process.send_message_back" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inject the Payload back in the Broker.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="payler.process.spool_message">
+<em class="property">async </em><code class="sig-prename descclassname">payler.process.</code><code class="sig-name descname">spool_message</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">message</span><span class="p">:</span> <span class="n">aio_pika.message.Message</span></em>, <em class="sig-param"><span class="n">driver</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#payler.db.SpoolManager" title="payler.db.SpoolManager">payler.db.SpoolManager</a></span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#payler.process.spool_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decode and spool <cite>message</cite> using <cite>driver</cite>.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-payler.runtime">
+<span id="payler-runtime-module"></span><h2>payler.runtime module<a class="headerlink" href="#module-payler.runtime" title="Permalink to this headline">¶</a></h2>
+<p>Configuration-based runtime execution.</p>
+<p>The default runtime will start every workflow in a background thread.</p>
+<dl class="py class">
+<dt id="payler.runtime.Workflow">
+<em class="property">class </em><code class="sig-prename descclassname">payler.runtime.</code><code class="sig-name descname">Workflow</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">action</span><span class="p">:</span> <span class="n">Callable<span class="p">[</span><span class="p">[</span>asyncio.events.AbstractEventLoop<span class="p">]</span><span class="p">, </span>None<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">loop</span><span class="p">:</span> <span class="n">asyncio.events.AbstractEventLoop</span></em><span class="sig-paren">)</span><a class="headerlink" href="#payler.runtime.Workflow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Atomic unit for a thread and its asyncio event_loop.</p>
+<dl class="py attribute">
+<dt id="payler.runtime.Workflow.action">
+<code class="sig-name descname">action</code><em class="property">: Callable<span class="p">[</span><span class="p">[</span>asyncio.events.AbstractEventLoop<span class="p">]</span><span class="p">, </span>None<span class="p">]</span></em><a class="headerlink" href="#payler.runtime.Workflow.action" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="payler.runtime.Workflow.future">
+<code class="sig-name descname">future</code><em class="property">: _asyncio.Future</em><a class="headerlink" href="#payler.runtime.Workflow.future" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="payler.runtime.Workflow.loop">
+<code class="sig-name descname">loop</code><em class="property">: asyncio.events.AbstractEventLoop</em><a class="headerlink" href="#payler.runtime.Workflow.loop" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="payler.runtime.Workflow.name">
+<code class="sig-name descname">name</code><em class="property">: str</em><a class="headerlink" href="#payler.runtime.Workflow.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="payler.runtime.Workflow.register_action">
+<code class="sig-name descname">register_action</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#payler.runtime.Workflow.register_action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register self.action as an asyncio.Future.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="payler.runtime.get_callable">
+<code class="sig-prename descclassname">payler.runtime.</code><code class="sig-name descname">get_callable</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">location</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'payler'</span></em>, <em class="sig-param"><span class="n">process</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#payler.runtime.get_callable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the action to execute using asyncio.</p>
+<p><cite>location</cite> defaults to “payler”, but anyone can provide custom</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="payler.runtime.register_workflows">
+<code class="sig-prename descclassname">payler.runtime.</code><code class="sig-name descname">register_workflows</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">workflow_config</span><span class="p">:</span> <span class="n">List<span class="p">[</span>Dict<span class="p">[</span>str<span class="p">, </span>str<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">loop</span><span class="p">:</span> <span class="n">asyncio.events.AbstractEventLoop</span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span><a class="reference internal" href="#payler.runtime.Workflow" title="payler.runtime.Workflow">payler.runtime.Workflow</a><span class="p">]</span><a class="headerlink" href="#payler.runtime.register_workflows" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform the <cite>workflows</cite> config entry in a list of <cite>Workflow</cite>.</p>
+<p>This function takes the <cite>.workflows</cite> list and creates the corresponding
+Workflow, which can then be used to start background processes.</p>
+<p>Example input:</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-payler.store">
+<span id="payler-store-module"></span><h2>payler.store module<a class="headerlink" href="#module-payler.store" title="Permalink to this headline">¶</a></h2>
+<p>Utility functions to</p>
+</div>
+<div class="section" id="module-payler.structs">
+<span id="payler-structs-module"></span><h2>payler.structs module<a class="headerlink" href="#module-payler.structs" title="Permalink to this headline">¶</a></h2>
+<p>Common structures and dataclasses.</p>
+<dl class="py class">
+<dt id="payler.structs.Payload">
+<em class="property">class </em><code class="sig-prename descclassname">payler.structs.</code><code class="sig-name descname">Payload</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">message</span><span class="p">:</span> <span class="n">Any</span></em>, <em class="sig-param"><span class="n">reference_date</span><span class="p">:</span> <span class="n">datetime.datetime</span></em>, <em class="sig-param"><span class="n">source</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">destination</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#payler.structs.Payload" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Wrapper around the actual payload.</p>
+<p>Wrap the payload content and provide metadata for payler.</p>
+<p>message: Original payload  # NOTE: could be pickled
+reup_time: Date after which the payload should be sent to the output queue.
+source: Queue from which the payload originated
+destination: Queue to which the payload should be sent back</p>
+<dl class="py method">
+<dt id="payler.structs.Payload.asdict">
+<code class="sig-name descname">asdict</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; dict<a class="headerlink" href="#payler.structs.Payload.asdict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a the Payload using a dictionary representation.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="payler.structs.Payload.destination">
+<code class="sig-name descname">destination</code><em class="property">: str</em><a class="headerlink" href="#payler.structs.Payload.destination" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="payler.structs.Payload.message">
+<code class="sig-name descname">message</code><em class="property">: Any</em><a class="headerlink" href="#payler.structs.Payload.message" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="payler.structs.Payload.message_as_amqp_job">
+<code class="sig-name descname">message_as_amqp_job</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bytes<a class="headerlink" href="#payler.structs.Payload.message_as_amqp_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format the payload for amqp processing.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="payler.structs.Payload.reference_date">
+<code class="sig-name descname">reference_date</code><em class="property">: datetime.datetime</em><a class="headerlink" href="#payler.structs.Payload.reference_date" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="payler.structs.Payload.source">
+<code class="sig-name descname">source</code><em class="property">: str</em><a class="headerlink" href="#payler.structs.Payload.source" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-payler.utils">
+<span id="payler-utils-module"></span><h2>payler.utils module<a class="headerlink" href="#module-payler.utils" title="Permalink to this headline">¶</a></h2>
+<p>Utility functions for Payler.</p>
+</div>
+<div class="section" id="module-payler">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-payler" title="Permalink to this headline">¶</a></h2>
+<p>Package configuration file.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to payler’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Theo &#34;Bob&#34; Massard
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
