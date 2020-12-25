@@ -17,6 +17,8 @@ def build_logger(name: str) -> logging.Logger:
         2020-10-30 17:55:59,927 - [    INFO ] - SpookManager: inserted document with _id=...
     """
     logger = logging.getLogger(name)
+    if logger.handlers:
+        return logger
     logger.setLevel(logging.INFO)
     formatter = logging.Formatter(LOG_FORMAT)
     stream_handler = logging.StreamHandler()
