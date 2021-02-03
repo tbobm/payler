@@ -2,5 +2,6 @@ aio_pika
 click
 motor
 pendulum
+prometheus-client
 pymongo
 PyYAML

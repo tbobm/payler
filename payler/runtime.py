@@ -27,6 +27,7 @@ class Workflow:
     action: Callable[[AbstractEventLoop], None]
     loop: AbstractEventLoop
     future: asyncio.Future = field(init=False)
+    kwargs: dict = None
 
     def register_action(self):
         """Register self.action as an asyncio.Future."""

@@ -8,6 +8,7 @@ import yaml
 AVAILABLE_SETTINGS = {
     'MONGODB_URL': 'mongodb://payler:secret@localhost/payler?authSource=admin',
     'BROKER_URL': 'amqp://payler:secret@localhost/payler',
+    'METRIC_SERVER_PORT': "8000",
 }
 
 
