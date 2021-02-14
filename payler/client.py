@@ -75,7 +75,6 @@ def run_payler(config_file: io.TextIOWrapper):
     configuration = config.load(config_file)
     http_metric_port = int(config.get('METRIC_SERVER_PORT'))
     metrics.start_http_server(http_metric_port)
-    metrics.JOB_COUNTER.labels('sample').inc()
     logger.info("Exposing metrics at %d", http_metric_port)
     loop = asyncio.get_event_loop()
     workflows = runtime.register_workflows(
@@ -90,4 +89,4 @@ def run_payler(config_file: io.TextIOWrapper):
 
 
 if __name__ == "__main__":
-    run_payler()
+    run_payler(None)
