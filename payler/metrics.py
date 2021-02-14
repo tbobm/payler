@@ -12,7 +12,7 @@ DESCRIPTION = "Count number of payler-processed jobs."
 JOB_COUNTER = Counter(
     METRIC_NAME,
     DESCRIPTION,
-    labelnames=['workflow'],
+    labelnames=['workflow', 'status'],
 )
 
 __all__ = [

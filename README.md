@@ -51,6 +51,7 @@ async def my_workflow(loop: asyncio.AbstractEventLoop) -> None:
 - Listen to a Broker Queue
 - Store messages with a duration or date as metadata
 - Re-inject the messages after the duration in the default Exchange
+- Output failed messages to global output
 
 ## Testing
 

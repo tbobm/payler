@@ -127,9 +127,19 @@ class SpoolManager:
                 )
                 JOB_COUNTER.labels(
                     self.kwargs.get('name', self.__class__.__name__),
+                    'success',
                 ).inc()
             except ProcessingError as err:
-                self.logger.error('Could not parse %s: %s', doc['_id'], err)
+                self.logger.error(
+                    'Could not process id=%s reason=%s payload=%r',
+                    doc['_id'],
+                    err,
+                    doc,
+                )
+                JOB_COUNTER.labels(
+                    self.kwargs.get('name', self.__class__.__name__),
+                    'failed',
+                ).inc()
                 continue
             if result:
                 await self.collection.delete_one({'_id': doc['_id']})
