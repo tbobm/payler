@@ -6,6 +6,20 @@ _Send your payload now, treat it later._
 
 Payler is an asyncio-based Python application intended to provide a way of delaying message execution. The goal of this program is to reduce the workload on your existing message broker solution (Only RabbitMQ is currently supported, but other message-brokers can be easily implemented) by putting the payloads in a storage backend which will then be polled to re-inject payloads in the corresponding destination.
 
+## Installation
+
+Through pypi:
+```console
+$ pip install payler
+```
+
+Through [poetry](https://github.com/python-poetry/poetry):
+```console
+$ git clone https://github.com/tbobm/payler
+$ cd payler
+$ poetry install
+```
+
 ## How to use this
 
 Using the command line:
