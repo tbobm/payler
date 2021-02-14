@@ -7,6 +7,7 @@ import click
 from payler import config, logs, process, runtime
 from payler.broker import BrokerManager
 from payler.db import SpoolManager
+from payler import metrics
 
 
 async def process_queue(loop: asyncio.events.AbstractEventLoop):
@@ -72,6 +73,9 @@ def run_payler(config_file: io.TextIOWrapper):
     logger = logs.build_logger("main")
     logger.info("Starting up payler with config_file=%s", config_file.name)
     configuration = config.load(config_file)
+    http_metric_port = int(config.get('METRIC_SERVER_PORT'))
+    metrics.start_http_server(http_metric_port)
+    logger.info("Exposing metrics at %d", http_metric_port)
     loop = asyncio.get_event_loop()
     workflows = runtime.register_workflows(
         configuration['workflows'],
@@ -83,5 +87,6 @@ def run_payler(config_file: io.TextIOWrapper):
     logger.info("Firing up workflows.")
     loop.run_forever()
 
+
 if __name__ == "__main__":
-    listen_to_broker()
+    run_payler(None)

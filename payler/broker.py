@@ -6,8 +6,9 @@ import aio_pika
 
 from payler.db import SpoolManager
 from payler.errors import ProcessingError
-from payler.structs import Payload
+from payler.metrics import JOB_COUNTER
 from payler.logs import build_logger
+from payler.structs import Payload
 
 
 class BrokerManager:
@@ -104,6 +105,9 @@ class BrokerManager:
                             try:
                                 self.logger.debug('Processing %s', message)
                                 await self.action(message, self.driver, **kwargs)
+                                JOB_COUNTER.labels(
+                                    self.kwargs.get('name', self.__class__.__name__),
+                                ).inc()
                             except ProcessingError as reason:
                                 # NOTE: handle this properly (logging)
                                 self.logger.error('could not parse message %s', reason)

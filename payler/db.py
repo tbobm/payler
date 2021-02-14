@@ -10,6 +10,7 @@ import pendulum
 import pymongo
 
 from payler.errors import ProcessingError
+from payler.metrics import JOB_COUNTER
 from payler.structs import Payload
 from payler.logs import build_logger
 
@@ -34,11 +35,13 @@ class SpoolManager:
             io_loop=loop,
         )
         self.database = self.client.get_default_database()
-        self.collection_name = spool_collection or self.DEFAULT_COLLECTION_NAME
-        self.collection = self.database[self.collection_name]  # type: AsyncIOMotorCollection
+
+        collection_name = spool_collection or self.DEFAULT_COLLECTION_NAME
+        self.collection = self.database[collection_name]  # type: AsyncIOMotorCollection
 
         self.action: typing.Callable
         self.driver = None
+        self.kwargs = None
 
     def __str__(self):
         return f'{type(self)} - {self.database}'
@@ -82,10 +85,11 @@ class SpoolManager:
         return result
 
     # TODO: Common method with BrokerManager
-    def configure(self, action: typing.Callable, driver=None):
+    def configure(self, action: typing.Callable, driver=None, **kwargs):
         """Configure the manager for post-spooling processing."""
         self.action = action
         self.driver = driver
+        self.kwargs = kwargs
 
     async def _search_ready(self, match_date: pendulum.datetime) -> typing.Any:
         query = {
@@ -121,6 +125,9 @@ class SpoolManager:
                 self.logger.info(
                     'Processed job with id=%s result=%s', doc['_id'], result,
                 )
+                JOB_COUNTER.labels(
+                    self.kwargs.get('name', self.__class__.__name__),
+                ).inc()
             except ProcessingError as err:
                 self.logger.error('Could not parse %s: %s', doc['_id'], err)
                 continue

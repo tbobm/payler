@@ -13,6 +13,7 @@ setup(
         "click",
         "motor",
         "pendulum",
+        "prometheus-client",
         "pymongo",
         "PyYAML",
     ],
