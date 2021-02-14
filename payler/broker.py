@@ -107,8 +107,16 @@ class BrokerManager:
                                 await self.action(message, self.driver, **kwargs)
                                 JOB_COUNTER.labels(
                                     self.kwargs.get('name', self.__class__.__name__),
+                                    'success',
                                 ).inc()
                             except ProcessingError as reason:
-                                # NOTE: handle this properly (logging)
-                                self.logger.error('could not parse message %s', reason)
+                                self.logger.error(
+                                    'Could not process reason=%s payload=%r',
+                                    reason,
+                                    message,
+                                )
+                                JOB_COUNTER.labels(
+                                    self.kwargs.get('name', self.__class__.__name__),
+                                    'failed',
+                                ).inc()
                                 continue
