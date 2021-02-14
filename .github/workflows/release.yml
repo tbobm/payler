@@ -1,7 +1,7 @@
 ---
-name: "Sphinx documentation"
+name: "Release"
 
-on:
+'on':
   push:
     branches:
       - master
@@ -9,9 +9,26 @@ on:
       - "*"
 
 jobs:
-  base-ci:
+  docker-image:
+    name: "Publish docker image"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Checkout Code"
+        uses: "actions/checkout@v2"
+      - name: "Push to GitHub Packages"
+        uses: "docker/build-push-action@v1"
+        with:
+          username: "${{ github.actor }}"
+          password: "${{ secrets.CR_PAT }}"
+          registry: ghcr.io
+          repository: tbobm/payler
+          tag_with_ref: true
+  documentation:
     name: "Generate documentation"
     runs-on: "ubuntu-latest"
+    needs:
+      - linter
+      - tests
     steps:
       - name: "Checkout Code"
         uses: "actions/checkout@v2"
