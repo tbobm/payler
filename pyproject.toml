@@ -1,0 +1,42 @@
+[tool.poetry]
+name = "payler"
+version = "0.2.0"
+description = "Move messages from one source to another one."
+
+license = "MIT"
+
+authors = [
+    'Theo "Bob" Massard <tbobm@protonmail.com>'
+]
+
+readme = 'README.md'  # Markdown files are supported
+
+repository = "https://github.com/tbobm/payler"
+homepage = "https://tbobm.github.io/payler"
+
+keywords = ['broker', 'data', 'rabbitmq', 'mongodb', 'spooler']
+
+[tool.poetry.dependencies]
+python = "^3.7"  # Compatible python versions must be declared here
+aio-pika = "^6.7.1"
+click = "^7.1.2"
+motor = "^2.3.1"
+pendulum = "^2.1.2"
+prometheus-client = "^0.9.0"
+pymongo = "^3.11.3"
+PyYAML = "^5.4.1"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.2"
+pytest-cov = "^2.11.1"
+pytest-asyncio = "^0.14.0"
+pylint = "^2.6.0"
+
+[tool.poetry.scripts]
+payler = 'payler.client:run_payler'
+
+[tool.pylint.FORMAT]
+max-line-length = 100
+
+[tool.pylint.'MESSAGES CONTROL']
+disable = 'fixme'
