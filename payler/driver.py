@@ -1,15 +1,11 @@
-"""Database-related utilities."""
+"""Common Driver utility module."""
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
+from asyncio import AbstractEventLoop
+from dataclasses import dataclass, field
 import logging
 import typing
 
-import motor.motor_asyncio
-import pendulum
-import pymongo
-from motor.motor_asyncio import AsyncIOMotorCollection
 
-from payler.errors import ProcessingError
 from payler.logs import build_logger
 from payler.metrics import JOB_COUNTER
 from payler.structs import Payload
@@ -17,59 +13,44 @@ from payler.structs import Payload
 
 @dataclass
 class Result:
-    """Class to wrap process outputs."""
+    """Wrapper class to ease post-processing."""
     success: bool
     headers: dict
     payload: Payload
 
 
-# TODO: Class to wrap input paylod
-# ex: aio_pika.Message
-#    delay = int(message.headers.get('x-delay'))
-#    # NOTE: transform default destination in constant
-#    destination = message.headers.get('x-destination', 'payler-out')
-#    data = message.body
-#    now = pendulum.now()
-#    reference = now.add(microseconds=delay * 1000)  # switch form us to ms
-#    # TODO: Variabilize source
-#    source = 'payler-jobs'
-#    payload = Payload(
-#        data,
-#        reference,
-#        source,
-#        destination,
-#    )
+@dataclass
+class DriverConfiguration:
+    """Common configuration for `BaseDriver` class.
+
+    :attr name: driver instance name
+    :attr url: connection URL for the backend
+    :attr loop: asyncio EventLoop
+    :attr logger: used by the Driver
+    :attr extra: kwargs-style extra argument for further driver configuration
+    """
+    name: str
+    url: str
+    loop: AbstractEventLoop = None
+    logger: logging.Logger = None
+    extra: dict = field(default_factory = lambda _: dict())
 
 
 class BaseDriver(ABC):
-    """Service to store payloads and interact with the Database."""
-    DEFAULT_COLLECTION_NAME = 'payloads'
-    # TODO: Move to conf.py
-    DEFAULT_SLEEP_DURATION = 30
+    """Parent class for Driver implementation."""
 
-    def __init__(self, url: str, loop, spool_collection: str = None, logger: logging.Logger = None):
+    def __init__(self, config: DriverConfiguration):
         """Create the backend connection."""
-        if logger is None:
+        self.logger = config.logger
+        if self.logger is None:
             self.logger = build_logger(self.__class__.__name__)  # type: logging.Logger
-        else:
-            self.logger = logger
-        self.client = motor.motor_asyncio.AsyncIOMotorClient(
-            url,
-            connectTimeoutMS=5000,
-            serverSelectionTimeoutMS=5000,
-            io_loop=loop,
-        )
-        self.database = self.client.get_default_database()
-
-        collection_name = spool_collection or self.DEFAULT_COLLECTION_NAME
-        self.collection = self.database[collection_name]  # type: AsyncIOMotorCollection
 
         self.action: typing.Callable
         self.driver = None
         self.kwargs = None
 
     def __str__(self):
-        return f'{type(self)} - {self.database}'
+        return f'{type(self)}'
 
     @abstractmethod
     async def setup(self) -> str:
