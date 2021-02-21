@@ -1,5 +1,9 @@
 # Payl[oad Spoo]ler
 
+[![Build Status](https://github.com/tbobm/payler/workflows/Quality/badge.svg)](https://github.com/tbobm/payler/workflows/Quality/)
+[![Build Status](https://github.com/tbobm/payler/workflows/Release/badge.svg)](https://github.com/tbobm/payler/workflows/Release/)
+
+
 _Send your payload now, treat it later._
 
 ## What is this?
