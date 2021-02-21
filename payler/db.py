@@ -9,39 +9,38 @@ from motor.motor_asyncio import AsyncIOMotorCollection
 import pendulum
 import pymongo
 
+from payler.driver import BaseDriver, DriverConfiguration, Result
 from payler.errors import ProcessingError
 from payler.metrics import JOB_COUNTER
 from payler.structs import Payload
 from payler.logs import build_logger
 
 
-# NOTE: Create a common class with BrokerManager
-class SpoolManager:
+class SpoolManager(BaseDriver):
     """Service to store payloads and interact with the Database."""
     DEFAULT_COLLECTION_NAME = 'payloads'
     # TODO: Move to conf.py
     DEFAULT_SLEEP_DURATION = 30
+    DEFAULTS = {
+        'spool_collection': 'payloads',
+        'sleep_duration': 30,
+    }
 
-    def __init__(self, url: str, loop, spool_collection: str = None, logger: logging.Logger = None):
+    def __init__(self, configuration: DriverConfiguration):
         """Create the backend connection."""
-        if logger is None:
-            self.logger = build_logger(self.__class__.__name__)  # type: logging.Logger
-        else:
-            self.logger = logger
+        super().__init__(configuration)
+
+        url = configuration.url
         self.client = motor.motor_asyncio.AsyncIOMotorClient(
             url,
             connectTimeoutMS=5000,
             serverSelectionTimeoutMS=5000,
-            io_loop=loop,
+            io_loop=configuration.loop,
         )
         self.database = self.client.get_default_database()
 
-        collection_name = spool_collection or self.DEFAULT_COLLECTION_NAME
+        collection_name = configuration.extra.get('spool_collection', self.DEFAULT_COLLECTION_NAME)
         self.collection = self.database[collection_name]  # type: AsyncIOMotorCollection
-
-        self.action: typing.Callable
-        self.driver = None
-        self.kwargs = None
 
     def __str__(self):
         return f'{type(self)} - {self.database}'
@@ -71,10 +70,8 @@ class SpoolManager:
         result = await self.client.server_info()
         return result is not None
 
-    # TODO: return object
-    # NOTE: create DriverResult
-    async def store_payload(self, payload: Payload, **kwargs) -> bool:
-        """Store the Payload with corresponding metadatas."""
+    async def process(self, payload: Payload, **kwargs) -> Result:
+        """Store the Payload in the collection along its metadatas."""
         result = await self.collection.insert_one(payload.asdict())
         self.logger.debug(
             'stored payload with id=%s reference_date=%s kwargs=%s',
@@ -82,14 +79,12 @@ class SpoolManager:
             payload.reference_date,
             kwargs,
         )
+        headers = {'location': self.collection.name}
+        result = Result(
+            success=True,
+            headers
+                )
         return result
-
-    # TODO: Common method with BrokerManager
-    def configure(self, action: typing.Callable, driver=None, **kwargs):
-        """Configure the manager for post-spooling processing."""
-        self.action = action
-        self.driver = driver
-        self.kwargs = kwargs
 
     async def _search_ready(self, match_date: pendulum.datetime) -> typing.Any:
         query = {
@@ -116,7 +111,7 @@ class SpoolManager:
             self.logger.debug('waiting for %ds', self.DEFAULT_SLEEP_DURATION)
             await asyncio.sleep(self.DEFAULT_SLEEP_DURATION)
 
-    async def process_and_cleanup(self):
+    async def listen(self):
         """Find the matching jobs, process them and remove them from storage."""
         match_date = pendulum.now()
         async for doc in self._search_ready(match_date):

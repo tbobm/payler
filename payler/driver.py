@@ -38,6 +38,9 @@ class DriverConfiguration:
 
 class BaseDriver(ABC):
     """Parent class for Driver implementation."""
+    DEFAULTS = {
+        'version': '0',
+    }
 
     def __init__(self, config: DriverConfiguration):
         """Create the backend connection."""
@@ -68,7 +71,20 @@ class BaseDriver(ABC):
 
     @abstractmethod
     async def process(self, payload: Payload, **kwargs) -> Result:
-        """Store the Payload with corresponding metadatas."""
+        """Interact with a single Payloer.
+
+        Behaviour can be described as a sink behaviour.
+
+        Potential implementations could be:
+        - Store a Payload in a Database
+        - Historize a Payload to S3
+        - Send a message in RabbitMQ
+        - Enrich payload and publish in a Redis
+
+        Result object **MUST** conform to the following principles:
+        - The success **MUST** inform of the processing state
+        - The payload **MUST** match the final data
+        """
         ...
 
     def configure(self, action: typing.Callable, driver=None, **kwargs):
