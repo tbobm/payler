@@ -104,3 +104,27 @@ jobs:
         with:
           github_token: ${{ secrets.GH_PAT  }}
           publish_dir: ./build/html/
+
+  publish:
+    name: "Publish to Pypi"
+    runs-on: "ubuntu-latest"
+    # TODO: Add linter after refactoring Drivers
+    needs:
+      - tests
+        # - linter
+    steps:
+      - name: "Checkout Code"
+        uses: "actions/checkout@v2"
+
+      - name: "Setup Python Environment"
+        uses: "actions/setup-python@v2"
+        with:
+          python-version: "3.x"
+      - name: "Setup Poetry"
+        uses: "Gr1N/setup-poetry@v4"
+      - name: "Install package"
+        run: "poetry install"
+      - name: "Configure Poetry"
+        run: "poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}"
+      - name: "Publish package"
+        run: "poetry publish --build"
