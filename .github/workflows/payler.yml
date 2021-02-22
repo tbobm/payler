@@ -108,6 +108,7 @@ jobs:
   publish:
     name: "Publish to Pypi"
     runs-on: "ubuntu-latest"
+    if: startsWith(github.ref, 'refs/tags/')
     # TODO: Add linter after refactoring Drivers
     needs:
       - tests
