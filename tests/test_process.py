@@ -4,8 +4,9 @@ import pymongo
 import pytest
 from aio_pika import Message
 
-from payler.db import SpoolManager
 from payler import config, process
+from payler.db import SpoolManager
+from payler.driver import DriverConfiguration
 
 
 @pytest.mark.asyncio
@@ -16,7 +17,13 @@ async def test_spool_message(event_loop, monkeypatch):
     message = Message(body, headers={'x-delay': delay})
     mongo_url = config.get('MONGODB_URL')
     database = pymongo.MongoClient(mongo_url).get_default_database()
-    manager = SpoolManager(mongo_url, event_loop)
+    driver_config = DriverConfiguration(
+        'test',
+        mongo_url,
+        event_loop,
+        None,
+    )
+    manager = SpoolManager(driver_config)
     await manager.is_reachable()
 
     now = pendulum.now()
@@ -24,13 +31,13 @@ async def test_spool_message(event_loop, monkeypatch):
         return now
 
     monkeypatch.setattr(pendulum, 'now', mockreturn)
-    result, payload = await process.spool_message(message, manager)
-    doc = database[manager.DEFAULT_COLLECTION_NAME].find_one(
-        {'_id': result.inserted_id},
+    result = await process.spool_message(message, manager)
+    doc = database[manager.DEFAULTS.get('spool_collection')].find_one(
+        {'_id': result.data.inserted_id},
     )
     assert doc is not None
     assert doc['message'] == body
 
-    ref = payload.reference_date
+    ref = result.payload.reference_date
     expected_ref = now.add(microseconds=int(delay) * 1_000)
     assert ref == expected_ref

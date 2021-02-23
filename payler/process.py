@@ -4,10 +4,11 @@ import pendulum
 
 from payler.broker import BrokerManager
 from payler.db import SpoolManager
+from payler.driver import Result
 from payler.structs import Payload
 
 
-async def spool_message(message: aio_pika.Message, driver: SpoolManager, **kwargs):
+async def spool_message(message: aio_pika.Message, driver: SpoolManager, **kwargs) -> Result:
     """Decode and spool `message` using `driver`."""
     delay = int(message.headers.get('x-delay'))
     # NOTE: transform default destination in constant
@@ -23,9 +24,9 @@ async def spool_message(message: aio_pika.Message, driver: SpoolManager, **kwarg
         source,
         destination,
     )
-    result = await driver.store_payload(payload, **kwargs)
+    result = await driver.process(payload, **kwargs)
     # TODO: do correct post-processing logging
-    return result, payload
+    return result
 
 
 async def send_message_back(document: dict, driver: BrokerManager, **kwargs):

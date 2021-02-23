@@ -7,6 +7,7 @@ import click
 from payler import config, logs, process, runtime
 from payler.broker import BrokerManager
 from payler.db import SpoolManager
+from payler.driver import DriverConfiguration
 from payler import metrics
 
 
@@ -15,7 +16,13 @@ async def process_queue(loop: asyncio.events.AbstractEventLoop):
     logger = logs.build_logger('process_queue')
     broker_url = config.get('BROKER_URL')
     mongo_url = config.get('MONGODB_URL')
-    storage_manager = SpoolManager(mongo_url, loop=loop, logger=logger)
+    driver_config = DriverConfiguration(
+        'watcher',
+        mongo_url,
+        loop,
+        logger,
+    )
+    storage_manager = SpoolManager(driver_config)
     await storage_manager.is_reachable()
     broker_manager = await BrokerManager.create(broker_url, loop=loop, logger=logger)
     broker_manager.configure(
@@ -30,7 +37,13 @@ async def watch_storage(loop: asyncio.events.AbstractEventLoop):
     logger = logs.build_logger('watch_storage')
     broker_url = config.get('BROKER_URL')
     mongo_url = config.get('MONGODB_URL')
-    storage_manager = SpoolManager(mongo_url, loop=loop, logger=logger)
+    driver_config = DriverConfiguration(
+        'watcher',
+        mongo_url,
+        loop,
+        logger,
+    )
+    storage_manager = SpoolManager(driver_config)
     await storage_manager.is_reachable()
     broker_manager = await BrokerManager.create(broker_url, loop=loop, logger=logger)
     logger.info(
@@ -44,7 +57,7 @@ async def watch_storage(loop: asyncio.events.AbstractEventLoop):
     )  # action=print, driver=None
 
     await storage_manager.setup()
-    await storage_manager.search_ready()
+    await storage_manager.listen()
 
 
 def listen_to_broker():

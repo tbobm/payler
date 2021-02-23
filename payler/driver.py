@@ -4,6 +4,7 @@ from asyncio import AbstractEventLoop
 from dataclasses import dataclass, field
 import logging
 import typing
+from typing import Any, Dict, Union, Optional
 
 
 from payler.logs import build_logger
@@ -17,6 +18,12 @@ class Result:
     success: bool
     headers: dict
     payload: Payload
+    data: Any
+
+
+def _generate_empty_dict() -> Dict[str,Any]:
+    _empty = dict()  # type: Dict[str,Any]
+    return _empty
 
 
 @dataclass
@@ -31,26 +38,27 @@ class DriverConfiguration:
     """
     name: str
     url: str
-    loop: AbstractEventLoop = None
-    logger: logging.Logger = None
-    extra: dict = field(default_factory = lambda _: dict())
+    loop: AbstractEventLoop
+    logger: logging.Logger
+    extra: Dict[str, Any] = field(default_factory=_generate_empty_dict)
 
 
 class BaseDriver(ABC):
     """Parent class for Driver implementation."""
     DEFAULTS = {
         'version': '0',
-    }
+    }  # type: Dict[str,Union[str,int]]
 
     def __init__(self, config: DriverConfiguration):
         """Create the backend connection."""
-        self.logger = config.logger
-        if self.logger is None:
+        if config.logger is None:
             self.logger = build_logger(self.__class__.__name__)  # type: logging.Logger
+        else:
+            self.logger = config.logger
 
         self.action: typing.Callable
-        self.driver = None
-        self.kwargs = None
+        self.driver = None  # type: Optional[BaseDriver]
+        self.kwargs = config.extra
 
     def __str__(self):
         return f'{type(self)}'
@@ -87,7 +95,7 @@ class BaseDriver(ABC):
         """
         ...
 
-    def configure(self, action: typing.Callable, driver=None, **kwargs):
+    def configure(self, action: typing.Callable, driver: Optional['BaseDriver']=None, **kwargs):
         """Configure the manager for post-spooling processing."""
         self.action = action
         self.driver = driver
