@@ -44,7 +44,7 @@ class SpoolManager(BaseDriver):
     def __str__(self):
         return f'{type(self)} - {self.database}'
 
-    async def setup(self) -> str:
+    async def setup(self, **kwargs) -> typing.Any:
         """Prepare the OutputDriver configuration.
 
         Create an index on the storage collection to improve querying spooled payloads.

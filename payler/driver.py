@@ -64,7 +64,7 @@ class BaseDriver(ABC):
         return f'{type(self)}'
 
     @abstractmethod
-    async def setup(self) -> str:
+    async def setup(self, **kwargs) -> typing.Any:
         # NOTE: Maybe allow both async and sync ?
         """Prepare the OutputDriver configuration.
 

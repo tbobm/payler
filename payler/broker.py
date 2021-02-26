@@ -5,17 +5,20 @@ import typing
 import aio_pika
 
 from payler.db import SpoolManager
+from payler.driver import BaseDriver, DriverConfiguration, Result
 from payler.errors import ProcessingError
-from payler.metrics import JOB_COUNTER
 from payler.logs import build_logger
+from payler.metrics import JOB_COUNTER
 from payler.structs import Payload
 
 
-class BrokerManager:
+class BrokerManager(BaseDriver):
     """Service to fetch and re-inject payloads."""
-    DEFAULT_ROUTING_KEY = "payloads"
     # NOTE: Maybe bind queue to exchange + routing key in configure ?
-    DEFAULT_QUEUE_NAME = "payler-jobs"
+    DEFAULTS = {
+        'routing_key': 'payloads',
+        'queue_name': 'payler-jobs',
+    }
 
     def __init__(self):
         self.logger = None  # type: logging.Logger
@@ -26,15 +29,15 @@ class BrokerManager:
         self.kwargs = None
 
     @classmethod
-    async def create(cls, url: str = None, loop = None, logger: logging.Logger = None):
+    async def create(cls, configuration: DriverConfiguration):
         """Create the backend connection."""
         broker_manager = BrokerManager()
-        broker_manager.logger = logger
+        broker_manager.logger = configuration.logger
         if broker_manager.logger is None:
             broker_manager.logger = build_logger(cls.__name__)
         broker_manager.connection = await aio_pika.connect_robust(
-            url,
-            loop=loop,
+            configuration.url,
+            loop=configuration.loop,
         )
         return broker_manager
 
@@ -43,9 +46,9 @@ class BrokerManager:
         result = await self.connection.ready()
         return result is None
 
-    async def send_payload(self, payload: Payload, routing_key: str = None, **kwargs):
+    async def process(self, payload: Payload, **kwargs) -> Result:
         """Send a Payload to self.routing_key."""
-        routing = routing_key or self.DEFAULT_ROUTING_KEY
+        routing = kwargs.get('routing_key', self.DEFAULTS['routing_key'])
         self.logger.info(
             'Processing payload due for %s with routing_key=%s and kwargs=%s',
             payload.reference_date.isoformat(),
@@ -60,31 +63,31 @@ class BrokerManager:
         except TypeError as err:
             raise ProcessingError('Invalid payload') from err
         channel = await self.connection.channel()
-        result = await channel.default_exchange.publish(
+        published = await channel.default_exchange.publish(
             message,
             routing_key=routing,
         )
         self.logger.debug('Sent payload to %s', routing)
         await channel.close()
+        result = Result(
+            success=True,
+            headers={},
+            payload=payload,
+            data=published,
+        )
+
         return result
 
-    def configure(self, action: typing.Callable = print, driver=None, **kwargs):
-        """Configure the BrokerManager to serve the listening Queue."""
-        # NOTE: could set as property / create BrokerManagerConfig
-        self.action = action
-        self.driver = driver
-        self.kwargs = kwargs
-
-    async def declare_queue(self, queue_name: str = None, **kwargs) -> aio_pika.Queue:
+    async def setup(self, **kwargs) -> aio_pika.Queue:
         """Instantiate a Queue and configure self.queue."""
         # NOTE: could provide default configuration and override using kwargs
-        queue_name = queue_name or self.DEFAULT_QUEUE_NAME
+        queue_name = kwargs.get('queue_name', self.DEFAULTS['queue_name'])
         channel = await self.connection.channel()
         queue = await channel.declare_queue(queue_name, **kwargs)
         await channel.close()
         return queue
 
-    async def serve(self, **kwargs):
+    async def listen(self, **kwargs):
         """Consume messages from `queue`."""
         self.logger.info(
             "Listening for events (action=%s, driver=%s)",
@@ -98,25 +101,19 @@ class BrokerManager:
         async with self.connection:
             async with self.connection.channel() as channel:
                 # TODO: Variabilize queue name based on listen_queue or equivalent
-                queue = await channel.declare_queue(self.DEFAULT_QUEUE_NAME, **kwargs)
+                queue = await channel.declare_queue(self.DEFAULTS['queue_name'], **kwargs)
                 async with queue.iterator() as queue_iter:
                     async for message in queue_iter:
                         async with message.process():
                             try:
                                 self.logger.debug('Processing %s', message)
                                 await self.action(message, self.driver, **kwargs)
-                                JOB_COUNTER.labels(
-                                    self.kwargs.get('name', self.__class__.__name__),
-                                    'success',
-                                ).inc()
+                                self._notify_done('success')
                             except ProcessingError as reason:
                                 self.logger.error(
                                     'Could not process reason=%s payload=%r',
                                     reason,
                                     message,
                                 )
-                                JOB_COUNTER.labels(
-                                    self.kwargs.get('name', self.__class__.__name__),
-                                    'failed',
-                                ).inc()
+                                self._notify_done('success')
                                 continue
