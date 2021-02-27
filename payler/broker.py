@@ -1,14 +1,9 @@
 """Broker-related utilities."""
-import logging
-import typing
-
 import aio_pika
 
-from payler.db import SpoolManager
 from payler.driver import BaseDriver, DriverConfiguration, Result
 from payler.errors import ProcessingError
 from payler.logs import build_logger
-from payler.metrics import JOB_COUNTER
 from payler.structs import Payload
 
 
@@ -20,18 +15,15 @@ class BrokerManager(BaseDriver):
         'queue_name': 'payler-jobs',
     }
 
-    def __init__(self):
-        self.logger = None  # type: logging.Logger
-        self.connection = None  # type: aio_pika.RobustConnection
-        self.queue = None  # type: aio_pika.Queue
-        self.action: typing.Callable
-        self.driver = None  # type: SpoolManager
-        self.kwargs = None
+    def __init__(self, config: DriverConfiguration):
+        super().__init__(config)
+        self.connection: aio_pika.RobustConnection
+        self.queue: aio_pika.Queue
 
     @classmethod
     async def create(cls, configuration: DriverConfiguration):
         """Create the backend connection."""
-        broker_manager = BrokerManager()
+        broker_manager = BrokerManager(configuration)
         broker_manager.logger = configuration.logger
         if broker_manager.logger is None:
             broker_manager.logger = build_logger(cls.__name__)
