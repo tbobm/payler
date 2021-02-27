@@ -85,7 +85,7 @@ jobs:
   documentation:
     name: "Generate documentation"
     runs-on: "ubuntu-latest"
-    # if: startsWith(github.ref, 'refs/tags/')
+    if: (startsWith(github.ref, 'refs/tags/') || startsWith(github.ref, 'refs/heads/main'))
     steps:
       - name: "Checkout Code"
         uses: "actions/checkout@v2"
