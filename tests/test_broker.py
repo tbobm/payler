@@ -4,6 +4,7 @@ import pytest
 
 from payler import config
 from payler.broker import BrokerManager
+from payler.driver import DriverConfiguration
 from payler.structs import Payload
 
 
@@ -11,7 +12,13 @@ from payler.structs import Payload
 async def test_init():
     """Ensure the BrokerManager connects to RabbitMQ."""
     broker_url = config.get('BROKER_URL')
-    manager = await BrokerManager.create(broker_url)
+    driver_config = DriverConfiguration(
+        'test',
+        broker_url,
+        None,
+        None,
+    )
+    manager = await BrokerManager.create(driver_config)
     assert await manager.is_reachable()
 
 
@@ -22,10 +29,19 @@ async def test_store():
     body = b'sample test'
     payload = Payload(body, reference, 'source', 'example')
     broker_url = config.get('BROKER_URL')
-    manager = await BrokerManager.create(broker_url)
-    delivered = await manager.send_payload(payload, payload.destination)
+    driver_config = DriverConfiguration(
+        'test',
+        broker_url,
+        None,
+        None,
+    )
+    manager = await BrokerManager.create(driver_config)
+    delivered = await manager.process(
+        payload,
+        routing_key=payload.destination,
+    )
     assert delivered is not None
-    assert delivered.body == body
+    assert delivered.data.body == body
 
 
 @pytest.mark.asyncio
@@ -33,7 +49,13 @@ async def configure():
     """Ensure the BrokerManager connects to RabbitMQ."""
     queue_name = 'test_declare'
     broker_url = config.get('BROKER_URL')
-    manager = await BrokerManager.create(broker_url)
+    driver_config = DriverConfiguration(
+        'test',
+        broker_url,
+        None,
+        None,
+    )
+    manager = await BrokerManager.create(driver_config)
     assert await manager.is_reachable()
     # TODO: Add configure test
 
@@ -43,7 +65,13 @@ async def test_serve(event_loop):
     """Ensure the BrokerManager connects to RabbitMQ."""
     queue_name = 'test_declare'
     broker_url = config.get('BROKER_URL')
-    manager = await BrokerManager.create(broker_url, event_loop)
+    driver_config = DriverConfiguration(
+        'test',
+        broker_url,
+        None,
+        None,
+    )
+    manager = await BrokerManager.create(driver_config)
     assert await manager.is_reachable()
 
     async def get_payload(payload, *args):

@@ -1,7 +1,8 @@
-# Payl[oad Spoo]ler
+# Payler
 
 [![Build Status](https://github.com/tbobm/payler/workflows/payler/badge.svg)](https://github.com/tbobm/payler/workflows/payler/)
 
+> The Payload Spooler
 
 _Send your payload now, treat it later._
 
@@ -65,20 +66,31 @@ async def my_workflow(loop: asyncio.AbstractEventLoop) -> None:
 
 ## Features
 
-- Listen to a Broker Queue
-- Store messages with a duration or date as metadata
-- Re-inject the messages after the duration in the default Exchange
-- Output failed messages to global output
+- Forward messages between multiple datasources
+- Based on asyncio (benchmarks are on the roadmap)
+- Extend using your own implementation of the [`BaseDriver`](./payler/driver.py) class
+
+### Drivers
+
+driver | process | serve
+------|------|------
+BrokerManager | Send a `Payload` to a Queue | Consume a queue's messages
+SpoolerManager | Store a `Payload` in a Collection | Fetch documents with a specific reference data
 
 ## Testing
 
-This project has unittests with [pytest](https://docs.pytest.org/en/latest/). A wrapper script is available at [run-tests.sh](./run-tests.sh).
+This project has unittests with [pytest](https://docs.pytest.org/en/latest/).
+
+You can run the tests using:
+```
+poetry run pytest
+```
 
 ## Contributing
 
 Feel free to open new issues for feature requests and bug reports in the [issue page](github.com/tbobm/payler/issues/new) and even create PRs if you feel like it.
 
-This project is linted with `pylint` with some minor adjustments (see the [setup.cfg](./setup.cfg)).
+This project is linted with `pylint` with some minor adjustments (see the [pyproject.toml](./pyproject.toml)).
 
 ## Note
 
