@@ -32,9 +32,9 @@ async def spool_message(message: aio_pika.Message, driver: SpoolManager, **kwarg
 async def send_message_back(document: dict, driver: BrokerManager, **kwargs):
     """Inject the Payload back in the Broker."""
     payload = Payload(
-        message=document.get('message'),
-        reference_date=document.get('reference_date'),
-        source=document.get('source'),
-        destination=document.get('destination'),
+        message=document['message'],
+        reference_date=document['reference_date'],
+        source=document['source'],
+        destination=document['destination'],
     )
-    return await driver.send_payload(payload, routing_key=payload.destination, **kwargs)
+    return await driver.process(payload, routing_key=payload.destination, **kwargs)
