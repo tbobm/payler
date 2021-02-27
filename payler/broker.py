@@ -81,10 +81,12 @@ class BrokerManager(BaseDriver):
 
     async def listen(self, **kwargs):
         """Consume messages from `queue`."""
+        queue_name = self.DEFAULTS['queue_name']
         self.logger.info(
-            "Listening for events (action=%s, driver=%s)",
+            "Listening for events (action=%s, driver=%s) with queue_name=%s",
             self.action.__name__,
             type(self.driver),
+            queue_name
         )
         if self.action is None:
             raise ProcessingError(
@@ -93,7 +95,7 @@ class BrokerManager(BaseDriver):
         async with self.connection:
             async with self.connection.channel() as channel:
                 # TODO: Variabilize queue name based on listen_queue or equivalent
-                queue = await channel.declare_queue(self.DEFAULTS['queue_name'], **kwargs)
+                queue = await channel.declare_queue(queue_name, **kwargs)
                 async with queue.iterator() as queue_iter:
                     async for message in queue_iter:
                         async with message.process():
