@@ -10,7 +10,8 @@ payler.driver module
 .. automodule:: payler.driver
    :members:
    :undoc-members:
-   :show-inheritance:
+   :private-members: _notify_done
+   :special-members: __init__
 
 payler.broker module
 --------------------
@@ -56,6 +57,21 @@ payler.logs module
 ------------------
 
 .. automodule:: payler.logs
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+payler.metrics module
+---------------------
+
+See the `Open Metrics project`_ for further documentation regarding the format.
+
+Payler uses the `prometheus_client`_ library to expose metrics in OpenMetrics format.
+
+.. _Open Metrics project: https://openmetrics.io/
+.. _prometheus_client: https://github.com/prometheus/client_python/
+
+.. automodule:: payler.metrics
    :members:
    :undoc-members:
    :show-inheritance:
