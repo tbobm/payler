@@ -4,6 +4,14 @@ payler package
 Submodules
 ----------
 
+payler.driver module
+--------------------
+
+.. automodule:: payler.driver
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 payler.broker module
 --------------------
 
@@ -16,14 +24,6 @@ payler.client module
 --------------------
 
 .. automodule:: payler.client
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-payler.commands module
-----------------------
-
-.. automodule:: payler.commands
    :members:
    :undoc-members:
    :show-inheritance:
@@ -76,14 +76,6 @@ payler.runtime module
    :undoc-members:
    :show-inheritance:
 
-payler.store module
--------------------
-
-.. automodule:: payler.store
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 payler.structs module
 ---------------------
 
@@ -96,14 +88,6 @@ payler.utils module
 -------------------
 
 .. automodule:: payler.utils
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: payler
    :members:
    :undoc-members:
    :show-inheritance:
