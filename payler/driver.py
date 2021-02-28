@@ -19,7 +19,12 @@ from payler.structs import Payload
 
 @dataclass
 class Result:
-    """Wrapper class to ease post-processing."""
+    """Wrapper class to ease post-processing.
+
+    :param success: The processing succeeded
+    :param headers: Informations regarding processing (timeout, destination)
+    :param payload: The processed :class:`Payload`
+    """
     success: bool
     headers: dict
     payload: Payload
@@ -41,11 +46,11 @@ class DriverConfiguration:
     :attr:`DriverConfiguration.extra` can be used to further customize
     the backends configurations.
 
-    :attr name: the driver instance name
-    :attr url: the connection URL for the backend
-    :attr loop: the main asyncio EventLoop
-    :attr logger: logging interface to be used by the :class:`BaseDriver`
-    :attr extra: kwargs-style extra argument for further driver configuration
+    :param name: the driver instance name
+    :param url: the connection URL for the backend
+    :param loop: the main asyncio :class:`AbstractEventLoop`
+    :param logger: logging interface to be used by the :class:`BaseDriver`
+    :param extra: kwargs-style extra argument for further driver configuration
     """
     name: str
     url: str
@@ -81,7 +86,7 @@ class BaseDriver(ABC):
         Current method configures the logging mechanism if missing by
         calling :func:`build_logger` with the instantiated class name.
 
-        Additional :attr:`kwargs` are configured using :param:`config.extra`
+        Additional :attr:`BaseDriver.kwargs` are configured using :attr:`config.extra`
         """
         if config.logger is None:
             self.logger = build_logger(self.__class__.__name__)  # type: logging.Logger
@@ -109,7 +114,17 @@ class BaseDriver(ABC):
 
     @abstractmethod
     async def is_reachable(self) -> bool:
-        """Ensure connection integrity to the remote Backend."""
+        """Ensure connection integrity to the remote Backend.
+
+        Call this method before trying to use :meth:`BaseDriver.listen`
+        or :meth:`BaseDriver.process` in order to prevent faulty behaviour.
+
+        Implementations can be:
+
+        - Ping the remote backend
+        - Execute a health check
+        - Perform a noop query
+        """
         ...
 
     @abstractmethod
@@ -137,21 +152,41 @@ class BaseDriver(ABC):
                   action: typing.Callable,
                   driver: Optional['BaseDriver']=None,
                   **kwargs: Dict[str, Any]):
-        """Configure the manager for post-spooling processing."""
+        """Configure the driver for :class:`Payload` processing.
+
+        :param action: The callable take will be applied to the :class:`Payload`
+        :param driver: Optional :class:`BaseDriver` to be used during processing
+        :param kwargs: Optional keyword args to be used during processing
+        """
         self.action = action
         self.driver = driver
         self.kwargs = kwargs
 
     @abstractmethod
     async def listen(self, **kwargs):
-        """Find documents with a `reference_date` older than `match_date`."""
+        """Set the :class:`BaseDriver` in listening (input) mode.
+
+        The driver **must** serve as an entrypoint for data, either
+        by polling, consuming or being available to other datasources.
+
+        Implementations can be:
+
+        - Perform a query on a specific backend (database polling)
+        - Listen for new jobs in a Queue
+        - Serve HTTP requests
+
+        The :meth:`BaseDriver.configure` method **should** be called to setup
+        :attr:`BaseDriver.action` and :attr:`BaseDriver.driver` that **may**
+        be used to define the workflow that the :class:`Payload` will follow.
+        """
         ...
 
     def _notify_done(self, status: str):
         """Increase the counter with matching status label.
 
+        The `status` can be either 'success' or 'failed'.
 
-        status can be either 'success' or 'failed'
+        See :mod:`payler.metrics` for definition.
         """
         JOB_COUNTER.labels(
             self.kwargs.get('name', self.__class__.__name__),
