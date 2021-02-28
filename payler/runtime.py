@@ -1,6 +1,6 @@
 """Configuration-based runtime execution.
 
-.. code-block::yaml
+.. code-block:: yaml
 
     ---
     workflows:
@@ -15,14 +15,20 @@ from asyncio.events import AbstractEventLoop
 import asyncio
 from dataclasses import dataclass, field
 import importlib
-from typing import Callable, Dict, List
+from typing import Callable, Dict, List, Optional
 
 from payler.errors import ProcessingError
 
 
 @dataclass
 class Workflow:
-    """Atomic unit for a thread and its asyncio event_loop."""
+    """Defines a worfkflow entity, with its logger, action, :class:`AbstractEventLoop`.
+
+    :param name: The workflow name
+    :param action: The :class:`Callable` that defines the coroutine
+    :param loop: The :class:`AbstractEventLoop` to use in the coroutine
+    :param kwargs: Extra arguments
+    """
     name: str
     action: Callable[[AbstractEventLoop], None]
     loop: AbstractEventLoop
@@ -34,10 +40,11 @@ class Workflow:
         self.future = asyncio.ensure_future(self.action(self.loop))
 
 
-def get_callable(location: str = "payler", process: str = None):
-    """Find the action to execute using asyncio.
+def get_callable(location: str = "payler", process: Optional[str] = None):
+    """Find the action to execute using :mod:`asyncio`.
 
-    `location` defaults to "payler", but anyone can provide custom
+    :param location: defaults to `"payler"` but you can provide custom
+        plugins implementing the :class:`payler.driver.BaseDriver`.
     """
     try:
         module = importlib.import_module(location)
@@ -59,15 +66,16 @@ def get_callable(location: str = "payler", process: str = None):
 
 def register_workflows(workflow_config: List[Dict[str, str]],
                        loop: AbstractEventLoop) -> List[Workflow]:
-    """Transform the `workflows` config entry in a list of `Workflow`.
+    """Transform the `workflows` config entry in a list of :class:`Workflow`.
 
     This function takes the `.workflows` list and creates the corresponding
-    Workflow, which can then be used to start background processes.
+    :class:`Workflow` which can then be used to start background processes.
 
     Example input:
 
-    .. code-bloc::yaml
+    .. code-block:: yaml
 
+        ---
         - name: "Consume broker payloads and store in MongoDB"
           callable: "client.process_queue"
         - name: "Poll storage and re-inject in RabbitMQ"
